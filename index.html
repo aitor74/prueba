@@ -3,134 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows Server Admin Toolkit</title>
+  <title>PowerShell Admin Toolkit</title>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 20px; }
-    h1 { text-align: center; }
-    .search-bar { margin-bottom: 20px; text-align: center; }
-    input[type="text"] { width: 50%; padding: 10px; font-size: 16px; }
-    .category { margin-bottom: 30px; }
-    .script { background: #fff; padding: 15px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; }
-    .script h3 { margin-top: 0; }
-    .script pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
-    button { padding: 5px 10px; background-color: #007bff; color: white; border: none; cursor: pointer; border-radius: 3px; }
-    button:hover { background-color: #0056b3; }
-    .hidden { display: none; }
+    body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f4; }
+    h1 { color: #333; }
+    pre { background: #eaeaea; padding: 10px; border-radius: 5px; }
+    button { padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
 
-  <h1>Windows Server Admin Toolkit</h1>
+  <h1>Obtener Información del Sistema Operativo</h1>
+  <p>Ejecuta este comando en PowerShell para obtener información del sistema operativo de tu servidor:</p>
 
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Buscar script..." onkeyup="filtrarScripts()">
-  </div>
-
-  <div id="scriptsContainer"></div>
+  <pre id="command">
+iex (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/TU_USUARIO/PowerShell-AdminToolkit/main/Scripts/Get-OSInfo.ps1')
+  </pre>
+  <button onclick="copyCommand()">📋 Copiar Comando</button>
 
   <script>
-    const scripts = [
-      {
-        category: 'Gestión de Usuarios',
-        items: [
-          { name: 'Crear Usuario', url: 'https://raw.githubusercontent.com/TU_USUARIO/WindowsServer-AdminToolkit/main/Scripts/UserManagement/CreateUser.ps1' },
-          { name: 'Deshabilitar Usuario', url: 'https://raw.githubusercontent.com/TU_USUARIO/WindowsServer-AdminToolkit/main/Scripts/UserManagement/DisableUser.ps1' },
-          { name: 'Resetear Contraseña', url: 'https://raw.githubusercontent.com/TU_USUARIO/WindowsServer-AdminToolkit/main/Scripts/UserManagement/ResetPassword.ps1' }
-        ]
-      },
-      {
-        category: 'Servicios',
-        items: [
-          { name: 'Reiniciar Servicio', url: 'https://raw.githubusercontent.com/TU_USUARIO/WindowsServer-AdminToolkit/main/Scripts/Services/RestartService.ps1' }
-        ]
-      },
-      {
-        category: 'Monitorización',
-        items: [
-          { name: 'Comprobar Espacio en Disco', url: 'https://raw.githubusercontent.com/TU_USUARIO/WindowsServer-AdminToolkit/main/Scripts/Monitoring/CheckDiskSpace.ps1' }
-        ]
-      },
-      {
-        category: 'Red',
-        items: [
-          { name: 'Obtener IP Local', url: 'https://raw.githubusercontent.com/TU_USUARIO/WindowsServer-AdminToolkit/main/Scripts/Network/GetIPAddress.ps1' }
-        ]
-      },
-      {
-        category: 'Actualizaciones',
-        items: [
-          { name: 'Ver Actualizaciones Pendientes', url: 'https://raw.githubusercontent.com/TU_USUARIO/WindowsServer-AdminToolkit/main/Scripts/Updates/CheckPendingUpdates.ps1' }
-        ]
-      }
-    ];
-
-    const scriptsContainer = document.getElementById('scriptsContainer');
-
-    function renderScripts() {
-      scriptsContainer.innerHTML = '';
-      scripts.forEach(category => {
-        const categoryDiv = document.createElement('div');
-        categoryDiv.className = 'category';
-
-        const categoryTitle = document.createElement('h2');
-        categoryTitle.textContent = category.category;
-        categoryDiv.appendChild(categoryTitle);
-
-        category.items.forEach(script => {
-          const scriptDiv = document.createElement('div');
-          scriptDiv.className = 'script';
-
-          const scriptTitle = document.createElement('h3');
-          scriptTitle.textContent = script.name;
-
-          const scriptCommand = `iex (New-Object Net.WebClient).DownloadString('${script.url}')`;
-          const scriptPre = document.createElement('pre');
-          scriptPre.textContent = scriptCommand;
-
-          const copyButton = document.createElement('button');
-          copyButton.textContent = '📋 Copiar Comando';
-          copyButton.onclick = () => copiar(scriptCommand);
-
-          scriptDiv.appendChild(scriptTitle);
-          scriptDiv.appendChild(scriptPre);
-          scriptDiv.appendChild(copyButton);
-
-          categoryDiv.appendChild(scriptDiv);
-        });
-
-        scriptsContainer.appendChild(categoryDiv);
-      });
-    }
-
-    function copiar(texto) {
-      navigator.clipboard.writeText(texto).then(() => {
+    function copyCommand() {
+      const commandText = document.getElementById('command').innerText;
+      navigator.clipboard.writeText(commandText).then(() => {
         alert('¡Comando copiado!');
       });
     }
-
-    function filtrarScripts() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const categories = scriptsContainer.getElementsByClassName('category');
-
-      Array.from(categories).forEach(category => {
-        let visible = false;
-        const scripts = category.getElementsByClassName('script');
-
-        Array.from(scripts).forEach(script => {
-          const title = script.getElementsByTagName('h3')[0].textContent.toLowerCase();
-          if (title.includes(input)) {
-            script.style.display = '';
-            visible = true;
-          } else {
-            script.style.display = 'none';
-          }
-        });
-
-        category.style.display = visible ? '' : 'none';
-      });
-    }
-
-    renderScripts();
   </script>
 
 </body>
